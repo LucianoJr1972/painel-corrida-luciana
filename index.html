@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Acompanhamento Luciana — Corrida 5km</title>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+  * { box-sizing: border-box; }
+  html { color-scheme: light; }
+
+  :root {
+    --surface-1:      #fcfcfb;
+    --page-plane:      #f9f9f7;
+    --text-primary:   #0b0b0b;
+    --text-secondary: #52514e;
+    --muted:          #898781;
+    --gridline:       #e1e0d9;
+    --baseline:       #c3c2b7;
+    --border:         rgba(11,11,11,0.10);
+    --card-bg:        #ffffff;
+
+    --c-corrida: #2a78d6;
+    --c-musc:    #008300;
+    --c-spin:    #eb6834;
+    --c-cal:        #4a3aa7;
+    --c-cal-active: #e34948;
+    --c-cal-basal:  #c3c2b7;
+
+    --good: #0ca30c;
+    --warning: #fab219;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: dark;
+      --surface-1:      #1a1a19;
+      --page-plane:      #0d0d0d;
+      --text-primary:   #ffffff;
+      --text-secondary: #c3c2b7;
+      --muted:          #898781;
+      --gridline:       #2c2c2a;
+      --baseline:       #383835;
+      --border:         rgba(255,255,255,0.10);
+      --card-bg:        #232322;
+
+      --c-corrida: #3987e5;
+      --c-musc:    #008300;
+      --c-spin:    #d95926;
+      --c-cal:        #9085e9;
+      --c-cal-active: #e66767;
+      --c-cal-basal:  #383835;
+
+      --good: #0ca30c;
+      --warning: #fab219;
+    }
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: var(--page-plane);
+    color: var(--text-primary);
+    padding: 24px 16px 60px;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; }
+
+  .page-nav { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding: 4px 4px 18px; }
+  .page-nav-title { font-size: 15px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+  .page-nav-link { font-size: 12.5px; font-weight: 700; color: #fff; background: var(--c-cal); text-decoration: none; padding: 7px 14px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px; }
+  .page-nav-link:hover { opacity: .85; }
+
+  .section-title {
+    font-size: 15px;
+    font-weight: 800;
+    margin: 28px 0 12px;
+    color: var(--text-primary);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    row-gap: 2px;
+    column-gap: 8px;
+  }
+  .section-sub { font-size: 12px; color: var(--muted); font-weight: 500; }
+
+  .kpi-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .kpi-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    border-top: 4px solid var(--kc);
+  }
+  .kpi-card.c-corrida { --kc: var(--c-corrida); }
+  .kpi-card.c-musc { --kc: var(--c-musc); }
+  .kpi-card.c-spin { --kc: var(--c-spin); }
+  .kpi-card.c-cal { --kc: var(--c-cal); }
+  .kpi-head { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; margin-bottom: 10px; }
+  .kpi-nums { display: flex; gap: 18px; margin-bottom: 8px; flex-wrap: wrap; }
+  .kpi-num-block .num { font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .kpi-num-block .lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+  .kpi-foot { font-size: 11px; color: var(--text-secondary); border-top: 1px solid var(--gridline); padding-top: 8px; margin-top: 4px; }
+  .badge-good { display: inline-flex; align-items: center; gap: 4px; font-size: 10.5px; font-weight: 700; color: var(--good); }
+  .badge-good::before { content: '●'; font-size: 8px; }
+
+  .venue-split { display: flex; gap: 10px; margin: 6px 0 8px; }
+  .venue-bar-wrap { flex: 1; }
+  .venue-bar-label { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-secondary); margin-bottom: 3px; }
+  .venue-bar-track { display: flex; height: 8px; border-radius: 4px; overflow: hidden; background: var(--gridline); }
+  .venue-bar-esteira { background: #2a78d6; }
+  .venue-bar-rua { background: #16a34a; }
+
+  .chart-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .chart-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .chart-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px 10px;
+    min-width: 0;
+  }
+  .chart-card-title { font-size: 12px; font-weight: 700; color: var(--text-secondary); margin-bottom: 10px; }
+  .chart-card-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+  .chart-card-head .chart-card-title { margin-bottom: 0; }
+  .period-toggle { display: inline-flex; background: var(--surface-1); border: 1px solid var(--border); border-radius: 20px; padding: 2px; gap: 2px; }
+  .period-toggle button { font: inherit; font-size: 10.5px; font-weight: 700; color: var(--muted); background: none; border: none; padding: 4px 10px; border-radius: 16px; cursor: pointer; }
+  .period-toggle button.active { background: var(--kc, var(--text-primary)); color: #fff; }
+  .period-toggle button:hover:not(.active) { color: var(--text-primary); }
+
+  /* ---- bar charts: value label goes INSIDE the bar (near top) when the bar is tall
+     enough to hold it; short bars keep the label just above, so it never gets clipped ---- */
+  .chart-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 130px;
+    border-bottom: 1.5px solid var(--baseline);
+    padding: 0 14px 2px;
+    overflow-x: auto;
+  }
+  .bar-col { flex: 1; min-width: 18px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; }
+  .bar {
+    position: relative;
+    width: 80%;
+    border-radius: 3px 3px 0 0;
+    min-height: 2px;
+  }
+  /* value label sits INSIDE the bar, absolutely positioned and centered on it —
+     rotated 90° so it reads bottom-to-top, running along the column like an axis label */
+  .bar-value-in {
+    position: absolute;
+    top: 6px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-90deg);
+    transform-origin: center;
+    font-size: 7.5px;
+    font-weight: 700;
+    color: #fff;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 1px 2px rgba(0,0,0,.45);
+    z-index: 2;
+  }
+  .bar-value-out {
+    font-size: 7.5px;
+    color: var(--muted);
+    margin-bottom: 4px;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+    transform: rotate(-90deg);
+    transform-origin: center;
+  }
+  .bar-label { font-size: 7.5px; color: var(--muted); margin-top: 4px; white-space: nowrap; }
+  .chart-bars-dense .bar-col { min-width: 12px; }
+  .chart-bars-dense .bar-value-in, .chart-bars-dense .bar-value-out { font-size: 6.5px; }
+  .chart-bars-dense .bar-label { font-size: 6.5px; }
+  .bar-stack { position: relative; width: 80%; display: flex; flex-direction: column; min-height: 4px; }
+  .bar-seg { width: 100%; }
+  .bar-seg.bar-active { background: var(--c-cal-active); border-radius: 3px 3px 0 0; margin-bottom: 1px; }
+  .bar-seg.bar-basal { background: var(--c-cal-basal); border-radius: 0 0 2px 2px; }
+
+  .route-card { display: flex; flex-direction: column; }
+  .route-svg-wrap {
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 8px;
+    margin-top: 4px;
+    height: 130px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .route-svg-wrap svg { height: 100%; width: auto; max-width: 100%; }
+  .route-stats { display: flex; gap: 12px; margin-top: 8px; font-size: 11px; color: var(--text-secondary); flex-wrap: wrap; }
+  .route-stats b { color: var(--text-primary); font-size: 13px; display: block; }
+
+  .log-table-wrap {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  table.log-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  table.log-table th {
+    text-align: left;
+    background: var(--surface-1);
+    color: var(--muted);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--gridline);
+    position: sticky; top: 0;
+  }
+  table.log-table td {
+    padding: 7px 12px;
+    border-bottom: 1px solid var(--gridline);
+    color: var(--text-primary);
+  }
+  table.log-table tr:last-child td { border-bottom: none; }
+  .cat-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 4px; }
+  tr.row-corrida .cat-dot { background: var(--c-corrida); }
+  tr.row-musc .cat-dot { background: var(--c-musc); }
+  tr.row-spin .cat-dot { background: var(--c-spin); }
+  .log-scroll { max-height: 520px; overflow-y: auto; overflow-x: auto; }
+
+  .legend-row { display: flex; gap: 16px; margin-bottom: 10px; font-size: 12px; color: var(--text-secondary); }
+  .legend-item { display: flex; align-items: center; gap: 5px; }
+  .legend-dot { width: 9px; height: 9px; border-radius: 50%; }
+
+  footer {
+    margin-top: 32px;
+    font-size: 11px;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  @media (max-width: 1000px) {
+    .kpi-row, .chart-grid { grid-template-columns: repeat(2, 1fr); }
+    .chart-grid-4 { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 640px) {
+    .kpi-row, .chart-grid, .chart-grid-4 { grid-template-columns: 1fr; }
+  }
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+  * { box-sizing: border-box; }
+  html { color-scheme: light; }
+  :root {
+    --surface-1: #fcfcfb; --page-plane: #f9f9f7; --text-primary: #0b0b0b; --text-secondary: #52514e;
+    --muted: #898781; --gridline: #e1e0d9; --border: rgba(11,11,11,0.10); --card-bg: #ffffff;
+    --c-base: #2a78d6; --c-construcao: #eb6834; --c-pico: #d6285f; --c-taper: #0d8a8a;
+    --good: #0ca30c; --now-bg: #fff7e0; --now-border: #f0d78a;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: dark;
+      --surface-1: #1a1a19; --page-plane: #0d0d0d; --text-primary: #ffffff; --text-secondary: #c3c2b7;
+      --muted: #898781; --gridline: #2c2c2a; --border: rgba(255,255,255,0.10); --card-bg: #232322;
+      --c-base: #3987e5; --c-construcao: #d95926; --c-pico: #ea4c80; --c-taper: #2bb3b3;
+      --good: #0ca30c; --now-bg: #2a2410; --now-border: #4d431c;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark; --surface-1: #1a1a19; --page-plane: #0d0d0d; --text-primary: #ffffff; --text-secondary: #c3c2b7;
+    --muted: #898781; --gridline: #2c2c2a; --border: rgba(255,255,255,0.10); --card-bg: #232322;
+    --c-base: #3987e5; --c-construcao: #d95926; --c-pico: #ea4c80; --c-taper: #2bb3b3; --now-bg: #2a2410; --now-border: #4d431c;
+  }
+  :root[data-theme="light"] {
+    color-scheme: light; --surface-1: #fcfcfb; --page-plane: #f9f9f7; --text-primary: #0b0b0b; --text-secondary: #52514e;
+    --muted: #898781; --gridline: #e1e0d9; --border: rgba(11,11,11,0.10); --card-bg: #ffffff;
+    --c-base: #2a78d6; --c-construcao: #eb6834; --c-pico: #d6285f; --c-taper: #0d8a8a; --now-bg: #fff7e0; --now-border: #f0d78a;
+  }
+
+  body { margin: 0; font-family: 'Inter', system-ui, -apple-system, sans-serif; background: var(--page-plane); color: var(--text-primary); padding: 16px 16px 60px; }
+  .wrap { max-width: 1180px; margin: 0 auto; }
+
+  .page-nav { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding: 10px 4px 18px; }
+  .page-nav-title { font-size: 15px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+  .page-nav-link { font-size: 12.5px; font-weight: 700; color: #fff; background: var(--c-base); text-decoration: none; padding: 7px 14px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px; }
+  .page-nav-link:hover { opacity: .85; }
+
+  .hero { background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 55%, #0ea5e9 130%); border-radius: 16px; padding: 26px 30px; color: #fff; margin-bottom: 22px; display: flex; flex-wrap: wrap; gap: 22px; align-items: center; }
+  .hero-main { flex: 1; min-width: 260px; }
+  .hero-eyebrow { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #7dd3fc; font-weight: 700; }
+  .hero-title { font-size: 26px; font-weight: 800; margin: 6px 0 4px; }
+  .hero-sub { font-size: 13px; color: #cbd5e1; max-width: 640px; }
+  .hero-progress { flex-basis: 100%; }
+  .hero-progress-bar { height: 8px; border-radius: 4px; background: rgba(255,255,255,.15); overflow: hidden; margin-top: 8px; }
+  .hero-progress-fill { height: 100%; background: #7dd3fc; border-radius: 4px; }
+  .hero-progress-txt { font-size: 11px; color: #cbd5e1; margin-top: 4px; }
+  .hero-countdown { text-align: center; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18); border-radius: 12px; padding: 14px 24px; min-width: 130px; }
+  .hero-countdown .num { font-size: 36px; font-weight: 800; color: #7dd3fc; line-height: 1; font-variant-numeric: tabular-nums; }
+  .hero-countdown .lbl { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #cbd5e1; margin-top: 4px; }
+  @media (max-width: 860px) { .hero { flex-direction: column; align-items: flex-start; } }
+
+  .section-title { font-size: 15px; font-weight: 800; margin: 28px 0 12px; display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 8px; }
+  .section-sub { font-size: 12px; color: var(--muted); font-weight: 500; }
+
+  .now-card { background: var(--now-bg); border: 1px solid var(--now-border); border-radius: 14px; padding: 18px 22px; display: flex; flex-wrap: wrap; gap: 20px; align-items: center; }
+  .now-card .big { font-size: 13px; font-weight: 800; }
+  .now-nums { display: flex; gap: 22px; flex-wrap: wrap; }
+  .now-nums .num { font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .now-nums .lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+
+  .phase-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .phase-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; border-top: 4px solid var(--pc); }
+  .phase-card.base { --pc: var(--c-base); }
+  .phase-card.construcao { --pc: var(--c-construcao); }
+  .phase-card.pico { --pc: var(--c-pico); }
+  .phase-card.taper { --pc: var(--c-taper); }
+  .phase-card.is-current { box-shadow: 0 0 0 2px var(--pc); }
+  .phase-name { font-size: 13px; font-weight: 800; }
+  .phase-weeks { font-size: 10.5px; color: var(--muted); margin-bottom: 8px; }
+  .phase-focus { font-size: 11.5px; color: var(--text-secondary); line-height: 1.4; }
+  .phase-current-tag { display: inline-block; font-size: 9px; font-weight: 800; letter-spacing: .4px; text-transform: uppercase; color: #fff; background: var(--pc); padding: 2px 7px; border-radius: 10px; margin-top: 8px; }
+
+  .status-chip { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 12px; white-space: nowrap; }
+  .status-chip.done { color: var(--good); background: rgba(12,163,12,.12); }
+  .status-chip.partial { color: #b8860b; background: rgba(250,178,25,.15); }
+  .status-chip.progress { color: var(--c-base); background: rgba(42,120,214,.12); }
+  .status-chip.future { color: var(--muted); background: var(--surface-1); }
+
+  .cal-month-title { font-size: 12.5px; font-weight: 800; color: var(--text-secondary); margin: 16px 2px 6px; }
+  .cal-wrap { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; overflow-x: auto; margin-bottom: 6px; }
+  .cal-grid { display: flex; flex-direction: column; gap: 4px; min-width: 640px; }
+  .cal-week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .cal-dow { text-align: center; font-size: 10px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; padding-bottom: 4px; }
+  .cal-day { min-height: 66px; border-radius: 8px; padding: 5px 6px; background: var(--surface-1); border: 1px solid var(--border); position: relative; }
+  .cal-day-outside { opacity: .3; }
+  .cal-day-today { border: 1.5px solid var(--c-base); background: rgba(42,120,214,.06); }
+  .cal-daynum { font-size: 11px; font-weight: 700; color: var(--text-secondary); margin-bottom: 3px; }
+  .cal-badge { font-size: 8.5px; font-weight: 700; border-radius: 4px; padding: 2px 4px; margin-top: 2px; line-height: 1.3; }
+  .cal-badge.v-esteira { background: rgba(42,120,214,.15); color: var(--c-base); }
+  .cal-badge.v-rua { background: rgba(12,163,12,.15); color: var(--good); }
+  .cal-badge.v-musc { background: rgba(0,131,0,.12); color: #007000; }
+  .cal-badge.v-spin { background: rgba(235,104,52,.15); color: #c1501f; }
+  .cal-badge.v-indefinido { background: var(--gridline, #e1e0d9); color: var(--muted); border: 1px dashed var(--border); }
+  .cal-badge-planned { background: transparent; border: 1px dashed var(--border); color: var(--muted); font-weight: 600; }
+  .cal-badge-done { background: rgba(12,163,12,.15); color: var(--good); font-weight: 700; }
+  .cal-badge-missed { background: rgba(214,40,95,.12); color: var(--c-pico); font-weight: 700; }
+
+  .cal-month-details { margin-bottom: 10px; }
+  .cal-month-details summary { cursor: pointer; list-style: none; }
+  .cal-month-details summary::-webkit-details-marker { display: none; }
+  .cal-month-details summary::before { content: "▸ "; font-size: 11px; color: var(--muted); }
+  .cal-month-details[open] summary::before { content: "▾ "; }
+  .cal-longrun-tag { position: absolute; top: 4px; right: 5px; font-size: 11px; }
+  .cal-legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 11px; color: var(--text-secondary); margin: 10px 2px 0; }
+  .cal-legend span { display: inline-flex; align-items: center; gap: 5px; }
+  .cal-legend i { width: 9px; height: 9px; border-radius: 3px; display: inline-block; }
+
+  .table-wrap { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .table-scroll { max-height: 560px; overflow-y: auto; overflow-x: auto; }
+  table.week-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  table.week-table th { text-align: left; background: var(--surface-1); color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: .5px; padding: 8px 10px; border-bottom: 1px solid var(--gridline); position: sticky; top: 0; }
+  table.week-table td { padding: 7px 10px; border-bottom: 1px solid var(--gridline); color: var(--text-primary); font-variant-numeric: tabular-nums; }
+  table.week-table tr:last-child td { border-bottom: none; }
+  table.week-table tr.is-current { background: var(--now-bg); }
+  table.week-table tr.is-current td:first-child { font-weight: 800; }
+  .phase-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 6px; }
+  .phase-dot.base { background: var(--c-base); }
+  .phase-dot.construcao { background: var(--c-construcao); }
+  .phase-dot.pico { background: var(--c-pico); }
+  .phase-dot.taper { background: var(--c-taper); }
+  .phase-dot.prova { background: var(--good); }
+
+  .pace-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .pace-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; text-align: center; }
+  .pace-card .lbl { font-size: 10.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
+  .pace-card .val { font-size: 17px; font-weight: 800; font-variant-numeric: tabular-nums; }
+
+  .note-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; font-size: 12.5px; color: var(--text-secondary); line-height: 1.55; }
+  .note-card b { color: var(--text-primary); }
+  .note-card ul { margin: 8px 0 0; padding-left: 18px; }
+
+  footer { margin-top: 32px; font-size: 11px; color: var(--muted); text-align: center; }
+
+  @media (max-width: 1000px) { .phase-grid, .pace-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 640px) { .phase-grid, .pace-grid { grid-template-columns: 1fr; } }
+
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <div class="hero-main">
+      <div class="hero-eyebrow">Plano de Treino</div>
+      <div class="hero-title">🏃‍♀️ Luciana — Prova de 5km</div>
+      <div class="hero-sub">Sábado, 10/10/2026, 19:00 · método corre/caminha · 5 semanas</div>
+    </div>
+    <div class="hero-countdown">
+      <div class="num">27</div>
+      <div class="lbl">dias para a prova</div>
+    </div>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi-card c-corrida">
+      <div class="kpi-head">🏃 Corrida</div>
+      <div class="kpi-body">
+        <div class="kpi-num-block"><div class="num">0</div><div class="lbl">7 dias</div></div>
+        <div class="kpi-num-block"><div class="num">0min</div><div class="lbl">min 7d</div></div>
+        <div class="kpi-num-block"><div class="num">0km</div><div class="lbl">km 7d</div></div>
+        <div class="kpi-num-block"><div class="num">0</div><div class="lbl">30 dias</div></div>
+      </div>
+    </div>
+    <div class="kpi-card c-musc">
+      <div class="kpi-head">🏋️ Musculação</div>
+      <div class="kpi-body">
+        <div class="kpi-num-block"><div class="num">2</div><div class="lbl">7 dias</div></div>
+        <div class="kpi-num-block"><div class="num">103min</div><div class="lbl">min 7d</div></div>
+        
+        <div class="kpi-num-block"><div class="num">9</div><div class="lbl">30 dias</div></div>
+      </div>
+    </div>
+    <div class="kpi-card c-spin">
+      <div class="kpi-head">🧘 Pilates</div>
+      <div class="kpi-body">
+        <div class="kpi-num-block"><div class="num">0</div><div class="lbl">7 dias</div></div>
+        <div class="kpi-num-block"><div class="num">0min</div><div class="lbl">min 7d</div></div>
+        
+        <div class="kpi-num-block"><div class="num">5</div><div class="lbl">30 dias</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">📋 Log diário <span class="section-sub">últimos 45 dias, mais recente primeiro</span></div>
+  <div class="legend-row">
+    <div class="legend-item"><span class="legend-dot" style="background:var(--c-corrida)"></span>Corrida</div>
+    <div class="legend-item"><span class="legend-dot" style="background:var(--c-musc)"></span>Musculação</div>
+    <div class="legend-item"><span class="legend-dot" style="background:var(--c-spin)"></span>Pilates</div>
+  </div>
+  <div class="log-table-wrap">
+    <div class="log-scroll">
+      <table class="log-table">
+        <thead><tr><th>Data</th><th>Dia</th><th>Tipo</th><th>Duração</th><th>Detalhe</th><th>❤️ FC méd/máx</th><th>Cal</th></tr></thead>
+        <tbody>
+<tr class="row-musc"><td>10/09</td><td>Qui</td><td><span class="cat-dot"></span>🏋️ Musculação</td><td>43.9min</td><td>-</td><td>96/114</td><td>73 cal</td></tr>
+<tr class="row-musc"><td>08/09</td><td>Ter</td><td><span class="cat-dot"></span>🏋️ Musculação</td><td>59.5min</td><td>-</td><td>102/119</td><td>106 cal</td></tr>
+<tr class="row-spin"><td>02/09</td><td>Qua</td><td><span class="cat-dot"></span>🧘 Pilates</td><td>40.2min</td><td>-</td><td>101/115</td><td>70 cal</td></tr>
+<tr class="row-musc"><td>01/09</td><td>Ter</td><td><span class="cat-dot"></span>🏋️ Musculação</td><td>34.0min</td><td>-</td><td>100/127</td><td>65 cal</td></tr>
+<tr class="row-spin"><td>31/08</td><td>Seg</td><td><span class="cat-dot"></span>🧘 Pilates</td><td>58.7min</td><td>-</td><td>104/132</td><td>120 cal</td></tr>
+<tr class="row-musc"><td>29/08</td><td>Sáb</td><td><span class="cat-dot"></span>🏋️ Musculação</td><td>47.4min</td><td>-</td><td>93/113</td><td>88 cal</td></tr>
+<tr class="row-musc"><td>28/08</td><td>Sex</td><td><span class="cat-dot"></span>🏋️ Musculação</td><td>54.4min</td><td>-</td><td>107/137</td><td>119 cal</td></tr>
+<tr class="row-musc"><td>27/08</td><td>Qui</td><td><span class="cat-dot"></span>🏋️ Musculação</td><td>78.5min</td><td>-</td><td>107/136</td><td>164 cal</td></tr>
+<tr class="row-spin"><td>26/08</td><td>Qua</td><td><span class="cat-dot"></span>🧘 Pilates</td><td>54.6min</td><td>-</td><td>95/121</td><td>96 cal</td></tr>
+<tr class="row-musc"><td>25/08</td><td>Ter</td><td><span class="cat-dot"></span>🏋️ Musculação</td><td>76.3min</td><td>-</td><td>99/131</td><td>138 cal</td></tr>
+<tr class="row-spin"><td>24/08</td><td>Seg</td><td><span class="cat-dot"></span>🧘 Pilates</td><td>50.2min</td><td>-</td><td>99/123</td><td>98 cal</td></tr>
+<tr class="row-musc"><td>21/08</td><td>Sex</td><td><span class="cat-dot"></span>🏋️ Musculação</td><td>77.0min</td><td>-</td><td>97/122</td><td>129 cal</td></tr>
+<tr class="row-musc"><td>20/08</td><td>Qui</td><td><span class="cat-dot"></span>🏋️ Musculação</td><td>54.5min</td><td>-</td><td>103/141</td><td>97 cal</td></tr>
+<tr class="row-spin"><td>17/08</td><td>Seg</td><td><span class="cat-dot"></span>🧘 Pilates</td><td>42.3min</td><td>-</td><td>96/110</td><td>71 cal</td></tr>
+<tr class="row-spin"><td>12/08</td><td>Qua</td><td><span class="cat-dot"></span>🧘 Pilates</td><td>53.9min</td><td>-</td><td>93/114</td><td>94 cal</td></tr>
+<tr class="row-spin"><td>10/08</td><td>Seg</td><td><span class="cat-dot"></span>🧘 Pilates</td><td>108.4min</td><td>-</td><td>96/120</td><td>182 cal</td></tr>
+<tr class="row-spin"><td>05/08</td><td>Qua</td><td><span class="cat-dot"></span>🧘 Pilates</td><td>50.5min</td><td>-</td><td>96/112</td><td>86 cal</td></tr>
+<tr class="row-spin"><td>03/08</td><td>Seg</td><td><span class="cat-dot"></span>🧘 Pilates</td><td>70.7min</td><td>-</td><td>98/121</td><td>119 cal</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-title">🗓️ Calendário do Plano <span class="section-sub">5 semanas · corre/caminha · 📋 planejado · ✅ concluído · ⚠️ não feito</span></div>
+  <details class="cal-month-details" open>
+    <summary>Setembro/2026</summary>
+    <div class="cal-wrap">
+      <div class="cal-grid"><div class="cal-week cal-header-row"><div class="cal-dow">Dom</div><div class="cal-dow">Seg</div><div class="cal-dow">Ter</div><div class="cal-dow">Qua</div><div class="cal-dow">Qui</div><div class="cal-dow">Sex</div><div class="cal-dow">Sáb</div></div><div class="cal-week"><div class="cal-day cal-day-outside"><div class="cal-daynum">30</div></div><div class="cal-day cal-day-outside"><div class="cal-daynum">31</div></div><div class="cal-day"><div class="cal-daynum">1</div><div class="cal-badge v-musc">🏋️</div></div><div class="cal-day"><div class="cal-daynum">2</div><div class="cal-badge v-spin">🧘</div></div><div class="cal-day"><div class="cal-daynum">3</div></div><div class="cal-day"><div class="cal-daynum">4</div></div><div class="cal-day"><div class="cal-daynum">5</div></div></div><div class="cal-week"><div class="cal-day"><div class="cal-daynum">6</div><div class="cal-badge cal-badge-missed" title="Planejado: Teste de base 2.5km">⚠️ Teste de base não feito</div></div><div class="cal-day"><div class="cal-daynum">7</div></div><div class="cal-day"><div class="cal-daynum">8</div><div class="cal-badge v-musc">🏋️</div><div class="cal-badge cal-badge-missed" title="Planejado: Curto 2.5km">⚠️ Curto não feito</div></div><div class="cal-day"><div class="cal-daynum">9</div></div><div class="cal-day"><div class="cal-daynum">10</div><div class="cal-badge v-musc">🏋️</div></div><div class="cal-day"><div class="cal-daynum">11</div></div><div class="cal-day"><div class="cal-daynum">12</div><div class="cal-badge cal-badge-missed" title="Planejado: Longo 3.0km">⚠️ ⭐ Longo não feito</div></div></div><div class="cal-week"><div class="cal-day cal-day-today"><div class="cal-daynum">13</div></div><div class="cal-day"><div class="cal-daynum">14</div></div><div class="cal-day"><div class="cal-daynum">15</div><div class="cal-badge cal-badge-planned" title="Planejado: Curto">📋 3.0km · Curto</div></div><div class="cal-day"><div class="cal-daynum">16</div></div><div class="cal-day"><div class="cal-daynum">17</div></div><div class="cal-day"><div class="cal-daynum">18</div></div><div class="cal-day"><div class="cal-daynum">19</div><div class="cal-badge cal-badge-planned" title="Planejado: Longo">📋 ⭐ 3.5km · Longo</div></div></div><div class="cal-week"><div class="cal-day"><div class="cal-daynum">20</div></div><div class="cal-day"><div class="cal-daynum">21</div></div><div class="cal-day"><div class="cal-daynum">22</div><div class="cal-badge cal-badge-planned" title="Planejado: Curto">📋 3.0km · Curto</div></div><div class="cal-day"><div class="cal-daynum">23</div></div><div class="cal-day"><div class="cal-daynum">24</div></div><div class="cal-day"><div class="cal-daynum">25</div></div><div class="cal-day"><div class="cal-daynum">26</div><div class="cal-badge cal-badge-planned" title="Planejado: Longo">📋 ⭐ 4.0km · Longo</div></div></div><div class="cal-week"><div class="cal-day"><div class="cal-daynum">27</div></div><div class="cal-day"><div class="cal-daynum">28</div></div><div class="cal-day"><div class="cal-daynum">29</div><div class="cal-badge cal-badge-planned" title="Planejado: Curto">📋 3.0km · Curto</div></div><div class="cal-day"><div class="cal-daynum">30</div></div><div class="cal-day cal-day-outside"><div class="cal-daynum">1</div></div><div class="cal-day cal-day-outside"><div class="cal-daynum">2</div></div><div class="cal-day cal-day-outside"><div class="cal-daynum">3</div></div></div></div>
+    </div>
+  </details>
+  <details class="cal-month-details" open>
+    <summary>Outubro/2026</summary>
+    <div class="cal-wrap">
+      <div class="cal-grid"><div class="cal-week cal-header-row"><div class="cal-dow">Dom</div><div class="cal-dow">Seg</div><div class="cal-dow">Ter</div><div class="cal-dow">Qua</div><div class="cal-dow">Qui</div><div class="cal-dow">Sex</div><div class="cal-dow">Sáb</div></div><div class="cal-week"><div class="cal-day cal-day-outside"><div class="cal-daynum">27</div></div><div class="cal-day cal-day-outside"><div class="cal-daynum">28</div></div><div class="cal-day cal-day-outside"><div class="cal-daynum">29</div></div><div class="cal-day cal-day-outside"><div class="cal-daynum">30</div></div><div class="cal-day"><div class="cal-daynum">1</div></div><div class="cal-day"><div class="cal-daynum">2</div></div><div class="cal-day"><div class="cal-daynum">3</div><div class="cal-badge cal-badge-planned" title="Planejado: Ensaio da prova">📋 ⭐ 4.5km · Ensaio da prova</div></div></div><div class="cal-week"><div class="cal-day"><div class="cal-daynum">4</div></div><div class="cal-day"><div class="cal-daynum">5</div></div><div class="cal-day"><div class="cal-daynum">6</div><div class="cal-badge cal-badge-planned" title="Planejado: Leve · último treino">📋 2.5km · Leve · último treino</div></div><div class="cal-day"><div class="cal-daynum">7</div></div><div class="cal-day"><div class="cal-daynum">8</div></div><div class="cal-day"><div class="cal-daynum">9</div></div><div class="cal-day"><div class="cal-daynum">10</div><div class="cal-badge cal-badge-planned" title="Planejado: PROVA">📋 ⭐ 5.0km · PROVA</div></div></div><div class="cal-week"><div class="cal-day"><div class="cal-daynum">11</div></div><div class="cal-day"><div class="cal-daynum">12</div></div><div class="cal-day"><div class="cal-daynum">13</div></div><div class="cal-day"><div class="cal-daynum">14</div></div><div class="cal-day"><div class="cal-daynum">15</div></div><div class="cal-day"><div class="cal-daynum">16</div></div><div class="cal-day"><div class="cal-daynum">17</div></div></div><div class="cal-week"><div class="cal-day"><div class="cal-daynum">18</div></div><div class="cal-day"><div class="cal-daynum">19</div></div><div class="cal-day"><div class="cal-daynum">20</div></div><div class="cal-day"><div class="cal-daynum">21</div></div><div class="cal-day"><div class="cal-daynum">22</div></div><div class="cal-day"><div class="cal-daynum">23</div></div><div class="cal-day"><div class="cal-daynum">24</div></div></div><div class="cal-week"><div class="cal-day"><div class="cal-daynum">25</div></div><div class="cal-day"><div class="cal-daynum">26</div></div><div class="cal-day"><div class="cal-daynum">27</div></div><div class="cal-day"><div class="cal-daynum">28</div></div><div class="cal-day"><div class="cal-daynum">29</div></div><div class="cal-day"><div class="cal-daynum">30</div></div><div class="cal-day"><div class="cal-daynum">31</div></div></div></div>
+    </div>
+  </details>
+
+
+  <footer>
+    Atualizado via export do Apple Saúde em 13/09/2026 21:33
+  </footer>
+</div>
+</body>
+</html>
